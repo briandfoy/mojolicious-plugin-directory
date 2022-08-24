@@ -1,13 +1,4 @@
-use Test::More 0.95;
-eval "use Test::Pod::Coverage";
-
-if( $@ ) {
-	plan skip_all => "Test::Pod::Coverage required for testing POD";
-	}
-else {
-	pod_coverage_ok( "Tie::Cycle",
-		{ trustme => [ qr/^[A-Z_]+$/ ] }
-		);      
-	}
-
-done_testing();
+use Test::More;
+eval "use Test::Pod::Coverage 1.00";
+plan skip_all => "Test::Pod::Coverage 1.00 required for testing POD coverage" if $@;
+all_pod_coverage_ok();
