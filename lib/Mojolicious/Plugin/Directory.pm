@@ -312,7 +312,7 @@ Many thanks to the contributors for their work.
 
 =head1 SEE ALSO
 
-L<Plack::App::Directory>
+L<Plack::App::Directory>, L<Mojolicious::Plugin::Directory>
 
 =head1 LICENSE
 
