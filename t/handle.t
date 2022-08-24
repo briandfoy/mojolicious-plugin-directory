@@ -30,7 +30,6 @@ subtest 'entries' => sub {
         next if $ent eq '.' or $ent eq '..';
         $ent = Encode::decode_utf8($ent);
         my $path = $root->child($ent);
-        diag( "path is <$path>" );
         if (-f $path) {
             $t->get_ok("/$ent")->status_is(200)->content_is( Encode::encode_utf8($path) );
         }
