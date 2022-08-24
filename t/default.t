@@ -1,12 +1,12 @@
 use Mojo::Base qw{ -strict };
 use Mojolicious::Lite;
 
-plugin 'Directory';
-
-use Test::More tests => 3;
+use Test::More;
 use Test::Mojo;
 
-my $t = Test::Mojo->new();
+plugin 'Directory';
+
+my $t = Test::Mojo->new;
 $t->get_ok('/')->status_is(200);
 
 subtest 'entries' => sub {
@@ -15,4 +15,6 @@ subtest 'entries' => sub {
         next if $ent eq '.' or $ent eq '..';
         $t->content_like(qr/$ent/);
     }
-}
+};
+
+done_testing();

@@ -1,21 +1,22 @@
 use Mojo::Base qw{ -strict };
 use Mojolicious::Lite;
 
-use File::Basename;
-use Mojo::Home;
-use Encode ();
+use Mojo::File;
 
-my $dir = dirname(__FILE__);
-plugin
-    'Directory',
-    root      => Mojo::Home->new($dir)->rel_file('dir'),
-    dir_index => [qw/index.html index.htm/];
-
-use Test::More tests => 3;
+use Test::More;
 use Test::Mojo;
 
-my $t = Test::Mojo->new();
+
+my $root = Mojo::File->new(__FILE__)->dirname;
+plugin
+    'Directory',
+    root      => $root->child('dir'),
+    dir_index => [qw/index.html index.htm/];
+
+my $t = Test::Mojo->new;
 $t->get_ok('/')->status_is(200);
 
 my $body = $t->tx->res->dom->at('body')->text;
 is Mojo::Util::trim($body), 'Hello World';
+
+done_testing();

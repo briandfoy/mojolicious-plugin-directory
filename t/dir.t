@@ -1,17 +1,18 @@
 use Mojo::Base qw{ -strict };
 use Mojolicious::Lite;
 
-use File::Basename;
 use Encode ();
-use version;
+use Mojo::File;
 
-my $dir = dirname(__FILE__);
-plugin 'Directory', root => $dir, json => 1;
-
-use Test::More tests => 2;
+use Test::More;
 use Test::Mojo;
 
-my $t = Test::Mojo->new();
+use version;
+
+my $dir = Mojo::File->new(__FILE__)->dirname;
+plugin 'Directory', root => $dir, json => 1;
+
+my $t = Test::Mojo->new;
 
 subtest 'entries' => sub {
     $t->get_ok('/')->status_is(200);
@@ -25,10 +26,12 @@ subtest 'entries' => sub {
 };
 
 subtest 'json' => sub {
-    my $res = $t->get_ok('/?format=json')->status_is(200);
+    my $res = $t->get_ok('/?_format=json')->status_is(200);
     if ( version->parse($Mojolicious::VERSION)->numify >= version->parse('6.09')->numify ) {
         $res->content_type_is('application/json;charset=UTF-8');
     } else {
         $res->content_type_is('application/json');
     }
 };
+
+done_testing();
