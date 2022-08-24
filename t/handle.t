@@ -9,7 +9,7 @@ use Test::Mojo;
 
 
 my $root = Mojo::File->new(__FILE__)->dirname;
-plugin 'Directory', root => $root, handler => sub {
+plugin 'Directory', root => $root, dir_index => [], handler => sub {
     my ($c, $path) = @_;
     $c->render( data => $path, format => 'txt' ) if (-f $path);
 };

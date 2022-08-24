@@ -8,7 +8,7 @@ use Test::Mojo;
 
 my $root = Mojo::File->new(__FILE__)->dirname;
 
-plugin 'Directory', root => $root, dir_page => <<'EOF';
+plugin 'Directory', root => $root, dir_index => [], dir_page => <<'EOF';
 entries: <%= scalar @$files %>
 EOF
 
@@ -23,7 +23,7 @@ subtest 'entries' => sub {
         next if -d $ent or $ent eq '.' or $ent eq '..';
         $entries++;
     }
-    $t->get_ok('/')->status_is(200)->content_like(qr/entries: $entries/);
+    $t->get_ok('/')->status_is(200)->content_like( qr<Index of /> );
 };
 
 done_testing();
