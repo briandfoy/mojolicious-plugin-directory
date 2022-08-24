@@ -1,3 +1,5 @@
+require v5.20;
+
 package Mojolicious::Plugin::Directory;
 use strict;
 use warnings;
@@ -6,7 +8,7 @@ our $VERSION = '0.14';
 use Cwd ();
 use Encode ();
 use DirHandle;
-use Mojo::Base qw{ Mojolicious::Plugin };
+use Mojo::Base qw{ Mojolicious::Plugin -signatures };
 use Mojolicious::Types;
 use Mojo::JSON qw(encode_json);
 
@@ -54,8 +56,7 @@ sub register {
     $dir_page = $args->{dir_page} if ( $args->{dir_page} );
 
     $app->hook(
-        before_dispatch => sub {
-            my $c = shift;
+        before_dispatch => sub ($c) {
             return render_file( $c, $root, $handler ) if ( -f $root->to_string() );
             my $path = $root->rel_file( Mojo::Util::url_unescape( $c->req->url->path ) );
             if ( -f $path ) {
@@ -102,11 +103,7 @@ sub render_file {
     Mojolicious::Static->new->dispatch($c);
 }
 
-sub render_indexes {
-    my $c    = shift;
-    my $dir  = shift;
-    my $json = shift;
-
+sub render_indexes ( $c, $dir, $json ) {
     my @files =
         ( $c->req->url->path eq '/' )
         ? ()
@@ -153,13 +150,13 @@ sub render_indexes {
     }
 }
 
-sub get_ext {
-    $_[0] =~ /\.([0-9a-zA-Z]+)$/ || return;
+sub get_ext ( $file ) {
+    $file =~ /\.([0-9a-zA-Z]+)$/ || return;
     return lc $1;
 }
 
-sub list_files {
-    my $dir = shift || return [];
+sub list_files ( $dir ) {
+    return [] unless $dir;
     my $dh = DirHandle->new($dir);
     my @children;
     while ( defined( my $ent = $dh->read ) ) {
