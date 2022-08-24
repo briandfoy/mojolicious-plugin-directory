@@ -59,19 +59,20 @@ sub register ( $self, $app, $args ) {
 		$app->helper( $key => sub { $args->{$key} } );
 		}
 
-	my $serve_single_file = -f $app->root->to_abs;
-	if( $serve_single_file ) {
-		@{$app->static->paths} = ();
-		$app->static->extra({ $app->root => $app->root->to_abs });
-		}
-	else {
-		@{$app->static->paths} = $app->root->to_abs;
-		}
+	my $sub = do {
+		if( -f $app->root->to_abs ) {
+			@{$app->static->paths} = ();
+			$app->static->extra({ $app->root => $app->root->to_abs });
+			\&serve_single_file;
+			}
+		else {
+			@{$app->static->paths} = $app->root->to_abs;
+			\&serve_directory;
+			}
+		};
 
-	@{$app->static->paths} = $serve_single_file ? () : $app->root;
 	$app->log->debug( "Static paths are <@{$app->static->paths}>" );
 
-    my $sub = $serve_single_file ? \&serve_single_file : \&serve_directory;
     $app->hook( before_dispatch => $sub );
 
     return $app;
@@ -243,7 +244,8 @@ L<Mojolicious::Plugin::Directory> supports the following options.
 
 Document root directory. Defaults to the current directory.
 
-If root is a file, serve only root file.
+If root is a file, serve only that file for every path. There will be no
+auto indexing.
 
 =head2 C<auto_index>
 
