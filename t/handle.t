@@ -1,18 +1,19 @@
 use Mojo::Base qw{ -strict };
 use Mojolicious::Lite;
 
-use File::Basename;
-use File::Spec;
-use Encode ();
+use Encode;
+use Mojo::File;
 
-my $dir = dirname(__FILE__);
-plugin 'Directory', root => $dir, handler => sub {
+use Test::More;
+use Test::Mojo;
+
+
+my $root = Mojo::File->new(__FILE__)->dirname;
+plugin 'Directory', root => $root, handler => sub {
     my ($c, $path) = @_;
     $c->render( data => $path, format => 'txt' ) if (-f $path);
 };
 
-use Test::More tests => 3;
-use Test::Mojo;
 
 my $t = Test::Mojo->new();
 $t->get_ok('/')->status_is(200);
@@ -23,13 +24,13 @@ my $location_is = sub {
   return $t->success(like($t->tx->res->headers->location, $regex));
 };
 
-use File::Basename;
 subtest 'entries' => sub {
-    my $dh = DirHandle->new($dir);
+    my $dh = DirHandle->new($root);
     while ( defined( my $ent = $dh->read ) ) {
-        $ent = Encode::decode_utf8($ent);
         next if $ent eq '.' or $ent eq '..';
-        my $path = File::Spec->catdir( $dir, $ent );
+        $ent = Encode::decode_utf8($ent);
+        my $path = $root->child($ent);
+        diag( "path is <$path>" );
         if (-f $path) {
             $t->get_ok("/$ent")->status_is(200)->content_is( Encode::encode_utf8($path) );
         }
@@ -39,4 +40,6 @@ subtest 'entries' => sub {
         }
         else { ok 0 }
     }
-}
+};
+
+done_testing();

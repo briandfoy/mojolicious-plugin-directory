@@ -1,15 +1,16 @@
 use Mojo::Base qw{ -strict };
 use Mojolicious::Lite;
 
-use File::Basename;
-use File::Spec;
+use Mojo::File;
 
-my $dir = dirname(__FILE__);
-plugin 'Directory', root => File::Spec->catfile( $dir, 'dummy.txt' );
-
-use Test::More tests => 6;
+use Test::More;
 use Test::Mojo;
+
+my $root = Mojo::File->new(__FILE__)->dirname;
+plugin 'Directory', root => $root->child( 'dummy.txt' );
 
 my $t = Test::Mojo->new();
 $t->get_ok('/')->status_is(200)->content_like(qr/^DUMMY$/);
 $t->get_ok('/foo/bar/buz')->status_is(200)->content_like(qr/^DUMMY$/);
+
+done_testing();
