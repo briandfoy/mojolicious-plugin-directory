@@ -195,6 +195,8 @@ sub list_files ( $dir ) {
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Mojolicious::Plugin::Directory - Serve static files from document root with directory index
