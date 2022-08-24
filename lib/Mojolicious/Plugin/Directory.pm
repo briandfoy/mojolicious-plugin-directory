@@ -285,7 +285,9 @@ sub _list_files ( $dir ) {
 
 =head1 AUTHOR
 
-hayajo E<lt>hayajo@cpan.orgE<gt>
+Original author of L<Mojolicious::Plugin::Directory>: hayajo E<lt>hayajo@cpan.orgE<gt>
+
+This version is heavily adapted by brian d foy, E<lt>bdfoy@cpan.orgE<gt>
 
 =head1 CONTRIBUTORS
 
@@ -293,7 +295,9 @@ Many thanks to the contributors for their work.
 
 =over 4
 
-=item ChinaXing
+=item * hayajo E<lt>hayajo@cpan.orgE<gt>
+
+=item * ChinaXing
 
 =back
 
