@@ -73,7 +73,7 @@ my %WriteMakefile = (
 		resources => {
 			repository => {
 				type => 'git',
-				url  => 'git@github.com:briandfoy/mojolicious-plugin-directory.git',
+				url  => 'https://github.com/briandfoy/mojolicious-plugin-directory',
 				web  => 'https://github.com/briandfoy/mojolicious-plugin-directory',
 				},
 			},
