@@ -1,4 +1,7 @@
 use strict;
-use Test::More tests => 1;
+use Test::More;
 
-BEGIN { use_ok 'Mojolicious::Plugin::Directory' }
+my $class = 'Mojolicious::Plugin::Directory' ;
+use_ok $class or BAIL_OUT( "$class did not compile: $@" );
+
+done_testing();
