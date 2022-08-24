@@ -61,7 +61,7 @@ my %WriteMakefile = (
 		},
 
 	'PREREQ_PM'    => {
-		'Mojolicious'           => '7',
+		'Mojolicious'           => '9.17',
 		},
 
 	'TEST_REQUIRES' => {
