@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use experimental qw(signatures);
 
-our $VERSION = '0.14';
+our $VERSION = '1.001';
 
 use Cwd ();
 use Encode ();
